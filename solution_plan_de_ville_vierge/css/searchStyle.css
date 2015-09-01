@@ -1,0 +1,110 @@
+
+#panelSearch{
+    width: 300px;
+}
+
+#panelGeocoder_input{
+    width: 176px;
+}
+
+.arcgisSearch .searchGroup .searchInput{
+	color: white !important;
+}
+/*
+
+.arcgisSearch{
+    width: 100%;
+}
+*/
+
+.arcgisSearch .searchClear {
+    background-color: transparent;
+    border-radius: 50%;
+    color: white;
+}
+
+.arcgisSearch{
+    border-radius: 5px;
+    background-color: rgba(0,0,0,0.1);
+}
+
+.
+
+.arcgisSearch .searchGroup .searchBtn {
+    color: white;
+}
+
+.arcgisSearch .searchGroup .searchBtn:hover{
+    color: white;
+    background-color: rgba(0,0,0,0.2);
+}
+
+.arcgisSearch .searchGroup .searchExpandContainer,
+.arcgisSearch .searchGroup .searchBtn,
+.arcgisSearch .searchGroup .searchInputGroup,
+.arcgisSearch .searchGroup .searchInputGroup input
+{
+    border: transparent;
+    background-color: transparent;
+}
+
+.arcgisSearch .searchGroup .searchInputGroup input:focus{
+    background-color: rgba(0,0,0,0.2);
+}
+
+.arcgisSearch .searchMenu,
+.arcgisSearch .suggestionsMenu{
+    max-height: 500px;
+}
+
+/* Portrait and Landscape */
+@media only screen 
+  and (min-device-width: 320px) 
+  and (max-device-width: 385px)/*
+  and (-webkit-min-device-pixel-ratio: 2) 
+  and (orientation: portrait) */{
+    #panelGeocoder_input{
+        width: 101px;
+    }
+      
+    #panelSearch{
+        width: 225px;
+    }
+      
+    .menuContainer{
+        /*
+        display: none;
+        position: absolute;
+        top: 70px;
+        left: 5px;
+        width: 25px;
+        background-color: rgba(0,0,0,0.6);
+        border-radius: 5px;
+        padding: 3px;
+        */
+    }
+}
+/*
+
+.arcgisSearch .searchGroup .searchInputGroup input{
+    border: transparent;
+    line-height: 16px;
+    height: 18px;
+    background-color: rgba(0,0,0,0.4);
+    color: white;
+    width: 198px;
+    padding-right: 0px;
+}
+
+.arcgisSearch .searchGroup .searchBtn :focus {
+    background-color: rgba(0,0,0,0.2);
+}
+.arcgisSearch .searchMenu {
+    color: white;
+    background-color: rgba(1,1,1,0.8);
+}
+
+.arcgisSearch .searchMenu li:hover {
+    background-color: rgba(0,0,0,0.5);
+}
+*/
