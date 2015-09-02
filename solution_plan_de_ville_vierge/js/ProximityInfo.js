@@ -301,11 +301,12 @@ define([
       },
        
       selectByAttribute : function(obj, zoom) {
-        var gra = this.map.graphics.graphics.find(lang.hitch(this, function(elt, index, array){
-            if(obj.attributes[this.controlField]===elt.attributes[this.controlField]) return true;
-            return false;
+        var gras = this.map.graphics.graphics;
+        for(var i =0 ; i<gras.length; i++){
+            if(gras[i].attributes[this.controlField]===elt.attributes[this.controlField])
+                this.selectFeature(gras[i], zoom);
+            }
         }));
-        this.selectFeature(gra, zoom);
       },
       
       // Highlight Record
