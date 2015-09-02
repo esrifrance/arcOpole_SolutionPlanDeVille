@@ -522,7 +522,8 @@ define([
          var num = 1;
          domStyle.set("panelMenu", "display", "none");
          domStyle.set("panelContent", "display", "block");
-         this.pages[this.curPage].proximityInfo.lastSelected = null;
+         if(this.pages[this.curPage].proximityInfo)
+            this.pages[this.curPage].proximityInfo.lastSelected = null;
          if (this.prevPage)
             num = this.prevPage;
          this._showPage(num);
