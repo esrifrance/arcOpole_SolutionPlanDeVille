@@ -303,10 +303,10 @@ define([
       selectByAttribute : function(obj, zoom) {
         var gras = this.map.graphics.graphics;
         for(var i =0 ; i<gras.length; i++){
-            if(gras[i].attributes[this.controlField]===elt.attributes[this.controlField])
+            if(obj.attributes[this.controlField]===gras[i].attributes[this.controlField])
                 this.selectFeature(gras[i], zoom);
-            }
-        }));
+        }
+		return null;
       },
       
       // Highlight Record
