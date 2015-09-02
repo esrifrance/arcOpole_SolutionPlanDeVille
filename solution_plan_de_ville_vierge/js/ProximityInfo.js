@@ -174,11 +174,12 @@ define([
                
                // num
                var recNum = domConstruct.create("div", {
-                  style : "background-color:" + this.pageObj.color,
                   innerHTML : num
                }, recHeader);
                if(symbol)
                    recNum.style = "";
+                else
+                   recNum.style = "background-color:" + this.pageObj.color;
                domClass.add(recNum, 'recNum');
                
                //headerInfo
