@@ -292,9 +292,9 @@ define([
          var sources = [];
          var worldGeocoderUrl;
          if (window.location.protocol != "https:")
-         	worldGeocoderUrl = "https";
+         	worldGeocoderUrl = "http";
          else
-         	worldGeocoderUrl = "http"
+         	worldGeocoderUrl = "https"
 	 worldGeocoderUrl += "://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer"
          var locator = new Locator(worldGeocoderUrl);
          locator.outSpatialReference = this.map.spatialReference;
