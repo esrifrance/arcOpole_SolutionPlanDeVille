@@ -290,7 +290,13 @@ define([
              page = evt;
           }
          var sources = [];
-         var locator = new Locator("http://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer");
+         var worldGeocoderUrl;
+         if (window.location.protocol != "https:")
+         	worldGeocoderUrl = "https";
+         else
+         	worldGeocoderUrl = "http"
+	 worldGeocoderUrl += "://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer"
+         var locator = new Locator(worldGeocoderUrl);
          locator.outSpatialReference = this.map.spatialReference;
          sources.push({
             locator: locator,
