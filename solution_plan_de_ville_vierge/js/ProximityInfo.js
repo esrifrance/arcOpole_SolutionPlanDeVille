@@ -49,8 +49,9 @@ define([
       container : null,
       pageObj : null,
       symbology:null,
-      lastSelected: null,
+      lastSelected: undefined,
       controlField: null,
+      selectedNum: null,
 
       constructor : function(config) {
          this.config = config;
@@ -66,7 +67,6 @@ define([
          this.pageObj = pageObj;
          this.controlField = pageObj.layer.objectIdField;
          this._unselectRecords();
-         this.pageObj.selectedNum = null;
 
          var layerType = pageObj.layerType;
 
@@ -82,6 +82,8 @@ define([
           var tr = screenUtils.toMapPoint(this.map.extent, this.map.width, this.map.height, new ScreenPoint(this.map.width-350,0));
           var bl = screenUtils.toMapPoint(this.map.extent, this.map.width, this.map.height, new ScreenPoint(0,this.map.height));
           var newExtent = new Extent(bl.x, bl.y, tr.x, tr.y, bl.spatialReference);
+          if(this.map.width<=500)
+              newExtent = this.map.extent;
          var layer = this.pageObj.layer;
          var url = layer.url + "?ts=" + new Date().getTime();
          var queryTask = new QueryTask(url);
@@ -100,7 +102,8 @@ define([
           var tr = screenUtils.toMapPoint(this.map.extent, this.map.width, this.map.height, new ScreenPoint(this.map.width-350,0));
           var bl = screenUtils.toMapPoint(this.map.extent, this.map.width, this.map.height, new ScreenPoint(0,this.map.height));
           var buffer = new Extent(bl.x, bl.y, tr.x, tr.y, bl.spatialReference);
-         //var buffer = this.map.extent;
+          if(this.map.width<=500)
+              buffer = this.map.extent;
          var layer = this.pageObj.layer;
          var features = [];
          for (var i = 0; i < layer.graphics.length; i++) {
@@ -202,8 +205,8 @@ define([
                domClass.add(recBody, 'recBody');
                
                if(this.lastSelected && feature.attributes[this.controlField]===this.lastSelected.attributes[this.controlField]){
-                   console.log("feature", feature, feature.attributes[this.controlField]);
-                   console.log("lastSelected", this.lastSelected, this.lastSelected.attributes[this.controlField]);
+//                   console.log("feature", feature, feature.attributes[this.controlField]);
+//                   console.log("lastSelected", this.lastSelected, this.lastSelected.attributes[this.controlField]);
                    indexSelected = i;
                }
                 
@@ -278,7 +281,7 @@ define([
 
       // Select Feature
       selectFeature : function(gra, zoom) {
-         this.lastSelected = gra;
+         this.lastSelected = gra;              
          var num = gra.id;
          num = num.replace("R_", "").replace("T_", "");
          this._selectRecord(parseInt(num), zoom);
@@ -290,13 +293,14 @@ define([
             zoom = true;
          }
          this._unselectRecords();
-         if (num != this.pageObj.selectedNum) {
+         if (num != this.selectedNum) {
             this._highlightRecord(num, zoom);
-         } else {
-            this.pageObj.selectedNum = null;
-            this.emit('highlight', {
-               data : null
-            });
+//         } else {
+//            this.selectedNum = null;
+//            this.lastSelected = undefined;
+//            this.emit('highlight', {
+//               data : null
+//            });
          }
       },
        
@@ -311,32 +315,42 @@ define([
       
       // Highlight Record
       _highlightRecord : function(num, zoom) {
-         this.pageObj.selectedNum = num;
+         this.selectedNum = num;
          if (this.pageObj.proximityFeatures) {
             var gra = this.pageObj.proximityFeatures[num];
-            this.emit('highlight', {
-               data : gra
-            });
-            if (zoom)
-               this._zoomToLocation(gra);
-            var rec = dom.byId("rec_" + this.pageObj.id + "_" + num);
-            if (rec) {
-               domClass.add(rec, "recOpened");
-               var recB = dom.byId("recBody_" + this.pageObj.id + "_" + num);
-               var recDetails = domConstruct.create("div", {
-                  id: "recDetails"
-               }, recB);
-               domClass.add(recDetails, "recDetails");
-               var cp = new ContentPane({
-                  id: "recPane"
-               });
-               cp.placeAt('recDetails', 'last');
-               cp.startup();
-               var content = gra.getContent();
-               registry.byId("recPane").set("content", content);
-               if (!zoom) {
-                  setTimeout(lang.hitch(this, this._updatePosition), 300);
-               }
+            
+            if(this.map.extent.contains(gra.geometry)){
+                console.log("IN");
+                
+             
+                this.emit('highlight', {
+                   data : gra
+                });
+                if (zoom)
+                   this._zoomToLocation(gra);
+                var rec = dom.byId("rec_" + this.pageObj.id + "_" + num);
+                if (rec) {
+                   domClass.add(rec, "recOpened");
+                   var recB = dom.byId("recBody_" + this.pageObj.id + "_" + num);
+                   var recDetails = domConstruct.create("div", {
+                      id: "recDetails"
+                   }, recB);
+                   domClass.add(recDetails, "recDetails");
+                   var cp = new ContentPane({
+                      id: "recPane"
+                   });
+                   cp.placeAt('recDetails', 'last');
+                   cp.startup();
+                   var content = gra.getContent();
+                   registry.byId("recPane").set("content", content);
+                   if (!zoom) {
+                      setTimeout(lang.hitch(this, this._updatePosition), 300);
+                   }
+                }
+            }else{
+                console.log('OUT');
+                this.lastSelected = undefined;
+                this.selectedNum = null;
             }
          }
       },
@@ -367,7 +381,7 @@ define([
 
       // Update Position
       _updatePosition : function() {
-         var num = this.pageObj.selectedNum;
+         var num = this.selectedNum;
          var pos = num * 60;
          this.container.scrollTop = pos;
       },
@@ -375,8 +389,8 @@ define([
       // Update Selection
       updateSelection : function() {
          this._unselectRecords();
-         if (this.pageObj && this.pageObj.selectedNum >= 0) {
-            var num = this.pageObj.selectedNum;
+         if (this.pageObj && this.selectedNum && this.selectedNum >= 0) {
+            var num = this.selectedNum;
             this._unselectRecords();
             this._highlightRecord(num, false);
          }
@@ -385,7 +399,7 @@ define([
 
       // Clear Selection
       clearSelection : function() {
-         this.pageObj.selectedNum = null;
+         this.selectedNum = null;
          this._unselectRecords();
       }
       

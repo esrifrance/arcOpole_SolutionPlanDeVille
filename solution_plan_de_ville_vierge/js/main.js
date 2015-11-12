@@ -88,6 +88,8 @@ define([
       ui : null,
        
       geocoder : null,
+	  
+	  menuPerso : null,
 
       // Startup
       startup : function(config) {
@@ -249,10 +251,16 @@ define([
              var menuOptions = this.ui.config;
              menuOptions.map = this.map;
              menuOptions.pages = this.ui.pages;
-             var menuPerso = new Menu(menuOptions);
-             menuPerso.startup();
+             this.menuPerso = new Menu(menuOptions);
+             this.menuPerso.startup();
+			 var node = dojo.byId("menuContainer");
+			 var style_ = domStyle.getComputedStyle(node);
+			 var value = parseInt(style_.height.replace("px", "")) + parseInt(style_.top.replace("px", ""));
+			 this.menuPerso.height = value;
+			 this._onResize();
+			 on(window, "resize", lang.hitch(this, this._onResize));
              var mainSource = geocoderOptions.geocoders;
-             on(menuPerso, "itemClick", lang.hitch(this, this._menuItemClicked));
+             on(this.menuPerso, "itemClick", lang.hitch(this, this._menuItemClicked));
           }
          // update theme
          this._updateTheme();
@@ -266,6 +274,25 @@ define([
          this._menuItemClicked(this.ui.pages[1]);
       },
       
+	  _onResize: function(evt){
+		if(this.menuPerso){
+			var node = dojo.byId("menuContainer");
+			if(evt){
+				if(this.menuPerso.height==="Nan" || evt.target.innerHeight <= this.menuPerso.height){
+					domStyle.set(node, "display", "none");
+				} else {
+					domStyle.set(node, "display", "block");
+				}
+			} else {
+				if(this.menuPerso.height==="Nan" || this.map.height <= this.menuPerso.height){
+					domStyle.set(node, "display", "none");
+				} else {
+					domStyle.set(node, "display", "block");
+				}
+			}
+		}
+	 },
+	  
       _searchSelect: function(result){
           var pageObj  = this.ui.pages[this.ui.curPage];
           var loc = result.result.feature.geometry;
@@ -354,7 +381,9 @@ define([
       
       // map click handler
       _mapClickHandler : function(event) {
-        this.ui.setLocation(event.extent);
+         var pt = this.map.extent.getCenter();
+        this.ui.setLocation(pt);
+         this.map.resize();
       },
       
        // Create UI

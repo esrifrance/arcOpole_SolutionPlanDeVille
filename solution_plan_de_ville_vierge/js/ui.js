@@ -114,6 +114,7 @@ define([
       dirMode: false,
       menuPerso: null,
       symbology:null,
+      lastPage: 1,
     
       constructor : function(config) {
          this.config = config;
@@ -531,6 +532,7 @@ define([
       
       // show page
       _showPage : function(num) {
+         this.lastPage = num;
          if (num > 0)
             domStyle.set("panelContent", "display", "block");
          this._scrollToPage(num);
@@ -663,7 +665,16 @@ define([
                dom.byId("pageBody_"+i).innerHTML = "";
             }
          }
-         if (pt) {
+         if (this.map.width <= 500){
+             this._showPage(this.lastPage);
+             this._updatePage();
+             var pageObj = this.pages[this.lastPage].proximityInfo;
+             if(!pageObj || (pageObj.selectedNum===null && pageObj.lastSelected===undefined)){
+                 domStyle.set("panelTop", "display", "block");
+                 domStyle.set("panelMenu", "display", "block");
+                 domStyle.set("panelContent", "display", "none");
+             }
+         }else if(pt) {
             if (this.curPage === 0) {
                this._showPage(1);
                // change color
@@ -671,7 +682,7 @@ define([
             } else {
                this._updatePage();
             }
-         } else {
+         } else{
             this._showPage(0);
             // change color
             this._changeColor(this.curPage, 0);

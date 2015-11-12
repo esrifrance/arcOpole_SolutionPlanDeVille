@@ -19,7 +19,7 @@ define({
     //Default configuration settings for the application. This is where you'll define things like a bing maps key,
     //default web map, default app color theme and more. These values can be overwritten by template configuration settings and url parameters.
     "appid": "",
-    "webmap": "********************************",
+    "webmap": "8ba156a09cd84450a2219b663564e4b9",
     "oauthappid": null,
     //Group templates must support a group url parameter. This will contain the id of the group.
     //group: "",
@@ -46,7 +46,7 @@ define({
     "color": "#80ab00",
     "colors": ["#0071ab", "#c263d4", "#b18d75", "#1951ec", "#19bf2b", "#ff891f", "#24d9b8", "#558663", "#878f9f", "#f34749", "#f607c0", "#33b49d", "#eccd00", "#097096"],
     "logo" : "images/logo.png",
-    "title": "Solution plan de ville",
+    "title": "Équipements à proximité",
     
     // **************************** //
     
@@ -74,7 +74,7 @@ define({
     "directionsURL": null,
     "distanceUnits": "kilometers", // options: miles or kilometers
     "defaultDistance": 3,
-    "defaultZoomLevel": 14,
+    "defaultZoomLevel": 17,
     "defaultToCenter": true,
     // **************************** //
     
